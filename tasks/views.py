@@ -7,4 +7,4 @@ def home_view(request):
 
 # Contact View
 def contact_view(request):
-    return HttpResponse("<h1>This is the Contact Page. Reach us at contact@taskmanagement.com")
+    return HttpResponse("<h1>This is the Contact Page. Reach us at contact@taskmanagement.com</h1>")
