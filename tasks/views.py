@@ -9,4 +9,9 @@ def user_dashboard(request):
     return render(request, "dashboard/user-dashboard.html")
 
 def static_test(request):
-    return render(request, "static_test.html")
+    context = {
+        'name': 'Raisul Islam',
+        'age': 24, 
+        'hobbies': ['Programming', 'Music', 'Cricket']
+    }
+    return render(request, "static_test.html", context)
