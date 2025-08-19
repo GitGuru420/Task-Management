@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-# Root Folder Templates
-def home(request):
-    return render(request, "home.html")
+# App Folder Templates
+def manager_dashboard(request):
+    return render(request, "dashboard.html")
+
+def user_dashboard(request):
+    return render(request, "user-dashboard.html")
