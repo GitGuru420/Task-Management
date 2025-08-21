@@ -16,6 +16,11 @@ class Task(models.Model):
         default=1
     )
     
+    # many to many
+    employoee =models.ManyToManyField(
+        'Employee'
+    )
+    
 # one to one
 class TaskDetail(models.Model):
     HIGH = 'H'
@@ -36,10 +41,16 @@ class TaskDetail(models.Model):
     )
     task = models.OneToOneField(
         Task,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name='details'
     )
     
 # many to one
 class Project(models.Model):
     name = models.CharField(max_length=100)
     start_date = models.DateField()
+    
+# many to many
+class Employee(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
