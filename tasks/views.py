@@ -15,3 +15,7 @@ def static_test(request):
         'hobbies': ['Programming', 'Music', 'Cricket']
     }
     return render(request, "static_test.html", context)
+
+# django forms and model form
+def submit_task(request):
+    return render(request, "submit_form.html")
