@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from tasks.forms import TaskForm
+from tasks.models import Employee
 
 # App Folder Templates
 def manager_dashboard(request):
@@ -18,4 +20,7 @@ def static_test(request):
 
 # django forms and model form
 def submit_task(request):
-    return render(request, "submit_form.html")
+    employees = Employee.objects.all()
+    form = TaskForm(employees=employees)
+    context = {"form": form}
+    return render(request, "submit_form.html", context)
