@@ -11,27 +11,48 @@ class TaskForm(forms.Form):
         employees = kwargs.pop("employees", [])
         super().__init__(*args, **kwargs)
         self.fields['employoee'].choices = [(emp.id, emp.name) for emp in employees]
-        
+
+"""Mixin to apply style to form field"""        
+class StyledFormMixin:
+     default_classes = "border-2 border-gray-300 w-full p-3 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500"
+     
+     def apply_styled_widgets(self):
+         for field_name, field in self.fields.items():
+            if isinstance(field.widget, forms.TextInput):
+                field.widget.attrs.update({
+                    'class': self.default_classes,
+                    'placeholder': f"Enter {field.label.lower()}"
+                })
+            elif isinstance(field.widget, forms.Textarea):
+                field.widget.attrs.update({
+                    'class': f"{self.default_classes} resize-none",
+                    'placeholder': f"Enter {field.label.lower()}",
+                    'rows': 5
+                })
+            elif isinstance(field.widget, forms.SelectDateWidget):
+                field.widget.attrs.update({
+                    'class': "border-2 border-gray-300 p-3 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500"
+                })
+            elif isinstance(field.widget, forms.CheckboxSelectMultiple):
+                field.widget.attrs.update({
+                    'class': "space-y-2"
+                })
+            else:
+                field.widget.attrs.update({
+                    'class': self.default_classes
+                })
 # Django Model Form
-class TaskModelForm(forms.ModelForm):
+class TaskModelForm(StyledFormMixin, forms.ModelForm):
     class Meta:
         model = Task
         fields = ['title', 'descriptions', 'due_date', 'employoee']
         
         widgets = {
-            'title': forms.TextInput(attrs={
-                'class': "border-2 border-gray-300 w-full p-3 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500",
-                'placeholder': "Enter a descriptive task title"
-            }),
-            'descriptions': forms.Textarea(attrs={
-                'class': "border-2 border-gray-300 w-full p-3 rounded-lg shadow-sm resize-none focus:outline-none focus:border-rose-500 focus:ring-rose-500",
-                'placeholder': "Provide detailed task information",
-                'rows': 5,
-            }),
-            'due_date': forms.SelectDateWidget(attrs={
-                'class': "border-2 border-gray-300 p-2 rounded-lg shadow-sm focus:outline-none focus:border-rose-500 focus:ring-rose-500"
-            }),
-            'employoee': forms.CheckboxSelectMultiple(attrs={
-                'class': "space-y-2"
-            })
+            'due_date': forms.SelectDateWidget,
+            'employoee': forms.CheckboxSelectMultiple
         }
+        
+    """Mixin Widget"""
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_styled_widgets()
