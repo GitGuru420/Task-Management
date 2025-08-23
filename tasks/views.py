@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from tasks.forms import TaskForm
+from tasks.forms import TaskForm, TaskModelForm
 from tasks.models import Employee, Task
 
 # App Folder Templates
@@ -21,26 +21,15 @@ def static_test(request):
 # django forms and model form
 def submit_task(request):
     employees = Employee.objects.all()
-    form = TaskForm(employees=employees)
+    form = TaskModelForm()
     
     # For POST
     if request.method == "POST":
-        form = TaskForm(request.POST, employees=employees)
+        form = TaskModelForm(request.POST)
         if form.is_valid():
-            data = form.cleaned_data
-            title = data.get('title')
-            descriptions = data.get('descriptions')
-            due_date = data.get('due_date')
-            employoee = data.get('employoee')
-            print(employoee)
+            """ For Model Form Data"""
+            form.save()
             
-            task = Task.objects.create(title=title, descriptions=descriptions, due_date=due_date)
-            
-            # assigne employee to tasks
-            for emp_id in employoee:
-                employee = Employee.objects.get(id=emp_id)
-                task.employoee.add(employee)
-                
-            return HttpResponse("Task Added Successfully")
+            return render(request, 'submit_form.html', {"form": form, "message": "Task Added Successfully"})
     context = {"form": form}
     return render(request, "submit_form.html", context)
